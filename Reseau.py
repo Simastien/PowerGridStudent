@@ -34,8 +34,18 @@ class Reseau:
         self.strat = strat
 
     def valider_reseau(self) -> bool:
-        # TODO
-        return False
+        check=[]
+        for i in range(len(self.noeuds)):
+            if(i!=0):
+                if(self.arcs[i]==[i-1,i]):
+                    check.append(True)
+                elif(check[self.arcs[i][0]]):
+                    check.append(True)
+                else:
+                    return False
+            else:
+                check.append(True)              
+        return True
 
     def valider_distribution(self, t: Terrain) -> bool:
         # TODO
