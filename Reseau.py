@@ -50,8 +50,32 @@ class Reseau:
         return True
 
     def valider_distribution(self, t: Terrain) -> bool:
-        # TODO
-        return False
+        nb_client=-1
+        coord_clients=[]
+        for i in range(0, len(t.cases)-1):
+            for j in range(0, len(t.cases[i])-1):
+                if (t[i][j]==Case.CLIENT):
+                    nb_client+=1
+                    coord_clients.append((i,j))
+        for k in range(0, nb_client):
+            a=0
+            c=False
+            for l in range(0, len(self.noeuds)-1):
+                if (self.noeuds[l]==coord_clients[k]):
+                    a=l
+                    c=True
+                elif(l==len(self.noeuds)-1 and not c):
+                    return False
+            c=False
+            for m in range(len(self.arcs)-1,0):
+                if(self.arcs[m][1]==a):
+                    if(self.arcs[m][0]==self.noeud_entree):
+                        c=True
+                    elif(m==0 and not c):
+                        return False
+                    else:
+                        a=self.arcs[m][0]
+        return True
 
     def configurer(self, t: Terrain):
         self.noeud_entree, self.noeuds, self.arcs  = self.strat.configurer(t)
