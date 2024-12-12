@@ -35,16 +35,18 @@ class Reseau:
 
     def valider_reseau(self) -> bool:
         check=[]
-        for i in range(len(self.noeuds)):
-            if(i!=0):
-                if(self.arcs[i]==[i-1,i]):
+        for i in range(0, len(self.noeuds)-1):
+            if(i==self.noeud_entree):
+                check.append(True)
+            else:
+                if(self.arcs[i-1]==(i-1,i)):
                     check.append(True)
-                elif(check[self.arcs[i][0]]):
+                elif(self.arcs[i-1]==(self.noeud_entree,i)):
+                    check.append(True)
+                elif(check[self.arcs[i-2][0]]):
                     check.append(True)
                 else:
-                    return False
-            else:
-                check.append(True)              
+                    return False           
         return True
 
     def valider_distribution(self, t: Terrain) -> bool:
