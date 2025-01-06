@@ -35,15 +35,15 @@ class Reseau:
 
     def valider_reseau(self) -> bool:
         check=[]
+        if(len(self.arcs)<len(self.noeuds)-1):
+            return False
         for i in range(0, len(self.noeuds)-1):
             if(i==self.noeud_entree):
                 check.append(True)
             else:
-                if(self.arcs[i-1]==(i-1,i)):
+                if(self.arcs[i-1]==(self.noeud_entree,i)):
                     check.append(True)
-                elif(self.arcs[i-1]==(self.noeud_entree,i)):
-                    check.append(True)
-                elif(check[self.arcs[i-2][0]]):
+                elif(check[self.arcs[i-1][0]]):
                     check.append(True)
                 else:
                     return False           
@@ -59,13 +59,13 @@ class Reseau:
                     coord_clients.append((i,j))
         for k in range(0, nb_client):
             a=0
-            c=False
+            co=-1
             for l in range(0, len(self.noeuds)-1):
                 if (self.noeuds[l]==coord_clients[k]):
                     a=l
-                    c=True
-                elif(l==len(self.noeuds)-1 and not c):
-                    return False
+                    co+=1
+            if(co!=nb_client):
+                return False
             c=False
             for m in range(len(self.arcs)-1,0):
                 if(self.arcs[m][1]==a):
@@ -81,7 +81,7 @@ class Reseau:
         self.noeud_entree, self.noeuds, self.arcs  = self.strat.configurer(t)
 
     def afficher(self) -> None:
-        # TODO
+
         pass
 
     def afficher_avec_terrain(self, t: Terrain) -> None:
