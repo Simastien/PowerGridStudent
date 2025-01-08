@@ -9,9 +9,10 @@ if __name__ == "__main__":
     reseau = Reseau()
 
     terrain = Terrain()
-    terrain.charger("terrains/t1.txt")
+    terrain.charger("terrains/t2.txt")
     print("Terrain chargé :")
     terrain.afficher()
+    
 
     print("======= Configuration Automatique")
     reseau.configurer(terrain)
