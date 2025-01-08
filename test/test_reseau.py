@@ -8,16 +8,36 @@ from Terrain import Terrain, Case
 class TestReseau(unittest.TestCase):
 
     def test_definition_entree(self):
-        # TODO
-        self.fail()
+        r = Reseau()
+        r.ajouter_noeud(0, (0, 0))
+        r.definir_entree(0)
+        self.assertEqual(r.noeud_entree, 0)
+
+        r.definir_entree(1)  # Noeud non existant
+        self.assertEqual(r.noeud_entree, -1)
 
     def test_ajout_noeud(self):
-        # TODO
-        self.fail()
+        r = Reseau()
+        r.ajouter_noeud(0, (0, 0))
+        r.ajouter_noeud(1, (1, 1))
+
+        self.assertIn(0, r.noeuds)
+        self.assertIn(1, r.noeuds)
+        self.assertEqual(r.noeuds[0], (0, 0))
+        self.assertEqual(r.noeuds[1], (1, 1))
 
     def test_ajout_arc(self):
-        # TODO
-        self.fail()
+        r = Reseau()
+        r.ajouter_noeud(0, (0, 0))
+        r.ajouter_noeud(1, (1, 1))
+        r.ajouter_arc(0, 1)
+
+        self.assertIn((0, 1), r.arcs)
+
+        # Test si un arc inversé n'est pas ajouté comme doublon
+        r.ajouter_arc(1, 0)
+        self.assertEqual(len(r.arcs), 1)
+        self.assertIn((0, 1), r.arcs)
 
     def test_validation_correcte(self):
         r = Reseau()
