@@ -34,19 +34,41 @@ class Reseau:
         self.strat = strat
 
     def valider_reseau(self) -> bool:
-        # TODO
-        return False
+        check=[]
+        if(len(self.arcs)<len(self.noeuds)-1):
+            return False
+        for i in range(0, len(self.noeuds)-1):
+            if(i==self.noeud_entree):
+                check.append(True)
+            else:
+                if(self.arcs[i-1]==(self.noeud_entree,i)):
+                    check.append(True)
+                elif(check[self.arcs[i-1][0]]):
+                    check.append(True)
+                else:
+                    return False           
+        return True
 
     def valider_distribution(self, t: Terrain) -> bool:
-        # TODO
-        return False
+        clients = t.get_clients()#on récupère la positions des clients
+        noeuds_positions = set(self.noeuds.values())# on récupère la position de tout les noeuds de notre distribution
+        return all(client in noeuds_positions for client in clients)#vérifie si la position de chaque client est dans la liste de position des noeuds
+        #on vérifie juste la présence du noeud correspondant à la position du client et pas forcément si elle est relié 
+        #car si l'algorithme pour relier les clients a pu arriver jusqu'à la position du client sachant qu'il part de l'entrée,
+        #cela veut dire qu'il a trouvé un chemin pour arriver jusqu'au client.
+        
 
     def configurer(self, t: Terrain):
         self.noeud_entree, self.noeuds, self.arcs  = self.strat.configurer(t)
 
     def afficher(self) -> None:
-        # TODO
-        pass
+        print("Noeuds :")
+        for key,coord in self.noeuds.items():
+            print(f"{key}: {coord}")
+        print("arcs :")
+        for arc in self.arcs:
+            print(f"{arc}")
+
 
     def afficher_avec_terrain(self, t: Terrain) -> None:
         for ligne, l in enumerate(t.cases):
