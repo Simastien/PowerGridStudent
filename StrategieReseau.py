@@ -13,20 +13,33 @@ class StrategieReseauManuelle(StrategieReseau):
         arcs = []
         num_noeud = 0
         print("configuration manuelle :")
+        print ("terrain actuel:")
+        t.afficher()
         while True:
-            print ("terrain actuel:")
-            t.afficher()
+            
             choix = input("ajouter un noeud? (yes/no)").strip().lower()
-            if choix != 'no':
+            
+            if choix == 'no':
                 break
-            x,y = map(int, input("coordonées du noeud (x,y) :").split())
-            noeuds[num_noeud] = (x,y)
-            print(f"noeud{num_noeud} ajouté en position ({x},{y}) ")
-            voisins = input("ajouter des arcs (liste d'IDs séparés par des espaces)").strip()
-            for voisin_id in map(int,voisins.split()):
-                arcs.append((num_noeud,voisin_id))
-            num_noeud +=1
-        noeud_entree = int( input("ID du noeud d'entrée :"))
+            elif choix == 'yes':
+                x,y = map(int, input("coordonées du noeud (x,y) :").strip().split(','))
+                noeuds[num_noeud] = (x,y)
+                print(f"noeud {num_noeud} ajouté en position ({x},{y}) ")
+                num_noeud +=1
+        print ("ajout des arcs:")
+        while True :
+             
+            choix = input("ajouter un arc? (yes/no)").strip().lower()
+            
+            if choix == 'no':
+                break
+            elif choix == 'yes':
+                voisins = input("ajouter un arcs (numéro des noeuds liés séparés par une virgule)").strip().split(',')
+                arcs.append((voisins[0],voisins[1]))
+                print (f"noeud {voisins[0]} et {voisins[1]} reliés")
+
+                
+        noeud_entree = int( input("numéro du noeud d'entrée :"))
         return noeud_entree, noeuds, arcs
 
 class StrategieReseauAuto(StrategieReseau):
@@ -98,40 +111,40 @@ class StrategieReseauAuto(StrategieReseau):
             chemin = []
             current = client
 
-        # Tant que le noeud actuel n'est pas l'entrée et qu'il existe dans le dictionnaire 'prev' (qui stocke les prédecesseurs)
-        while current != entree and current in prev:
-        # Ajouter le noeud actuel au chemin
-            chemin.append(current)
-            # Passer au prédecesseur du noeud actuel
-            current = prev[current]
+            # Tant que le noeud actuel n'est pas l'entrée et qu'il existe dans le dictionnaire 'prev' (qui stocke les prédecesseurs)
+            while current != entree and current in prev:
+            # Ajouter le noeud actuel au chemin
+                chemin.append(current)
+                # Passer au prédecesseur du noeud actuel
+                current = prev[current]
 
-        # Si on atteint l'entrée après avoir parcouru les prédecesseurs
-        if current == entree:
-        # Inverser l'ordre du chemin pour qu'il soit dans la bonne direction (de l'entrée au client)
-            chemin.reverse()
+            # Si on atteint l'entrée après avoir parcouru les prédecesseurs
+            if current == entree:
+            # Inverser l'ordre du chemin pour qu'il soit dans la bonne direction (de l'entrée au client)
+                chemin.reverse()
 
-        # Initialiser le dernier noeud traité avec l'ID correspondant à la position de l'entrée
-            last_node = position_to_id[entree]
+            # Initialiser le dernier noeud traité avec l'ID correspondant à la position de l'entrée
+                last_node = position_to_id[entree]
 
-        # Parcourir chaque étape dans le chemin calculé
-            for step in chemin:
-        # Si l'étape actuelle (coordonnées) n'a pas encore de noeud assigné
-                if step not in position_to_id:
-                # Associer un nouvel ID à cette étape
-                    position_to_id[step] = id_counter
-                # Ajouter ce noeud aux noeuds connus avec son ID et ses coordonnées
-                    noeuds[id_counter] = step
-                # Incrémenter le compteur d'ID pour le prochain noeud
-                    id_counter += 1
+            # Parcourir chaque étape dans le chemin calculé
+                for step in chemin:
+            # Si l'étape actuelle (coordonnées) n'a pas encore de noeud assigné
+                    if step not in position_to_id:
+                    # Associer un nouvel ID à cette étape
+                        position_to_id[step] = id_counter
+                    # Ajouter ce noeud aux noeuds connus avec son ID et ses coordonnées
+                        noeuds[id_counter] = step
+                    # Incrémenter le compteur d'ID pour le prochain noeud
+                        id_counter += 1
         
-                # Récupérer l'ID du noeud correspondant à cette étape
-                next_node = position_to_id[step]
+                    # Récupérer l'ID du noeud correspondant à cette étape
+                    next_node = position_to_id[step]
 
-                # Ajouter un arc entre le dernier noeud traité et le noeud actuel
-                arcs.append((last_node, next_node))
+                    # Ajouter un arc entre le dernier noeud traité et le noeud actuel
+                    arcs.append((last_node, next_node))
 
-                # Mettre à jour le dernier noeud traité pour continuer à connecter les noeuds
-                last_node = next_node
+                    # Mettre à jour le dernier noeud traité pour continuer à connecter les noeuds
+                    last_node = next_node
 
 
         return position_to_id[entree], noeuds, arcs
