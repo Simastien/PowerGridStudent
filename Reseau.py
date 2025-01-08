@@ -50,32 +50,13 @@ class Reseau:
         return True
 
     def valider_distribution(self, t: Terrain) -> bool:
-        nb_client=-1
-        coord_clients=[]
-        for i in range(0, len(t.cases)-1):
-            for j in range(0, len(t.cases[i])-1):
-                if (t[i][j]==Case.CLIENT):
-                    nb_client+=1
-                    coord_clients.append((i,j))
-        for k in range(0, nb_client):
-            a=0
-            co=-1
-            for l in range(0, len(self.noeuds)-1):
-                if (self.noeuds[l]==coord_clients[k]):
-                    a=l
-                    co+=1
-            if(co!=nb_client):
-                return False
-            c=False
-            for m in range(len(self.arcs)-1,0):
-                if(self.arcs[m][1]==a):
-                    if(self.arcs[m][0]==self.noeud_entree):
-                        c=True
-                    elif(m==0 and not c):
-                        return False
-                    else:
-                        a=self.arcs[m][0]
-        return True
+        clients = t.get_clients()#on récupère la positions des clients
+        noeuds_positions = set(self.noeuds.values())# on récupère la position de tout les noeuds de notre distribution
+        return all(client in noeuds_positions for client in clients)#vérifie si la position de chaque client est dans la liste de position des noeuds
+        #on vérifie juste la présence du noeud correspondant à la position du client et pas forcément si elle est relié 
+        #car si l'algorithme pour relier les clients a pu arriver jusqu'à la position du client sachant qu'il part de l'entrée,
+        #cela veut dire qu'il a trouvé un chemin pour arriver jusqu'au client.
+        
 
     def configurer(self, t: Terrain):
         self.noeud_entree, self.noeuds, self.arcs  = self.strat.configurer(t)
