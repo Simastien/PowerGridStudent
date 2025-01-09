@@ -34,20 +34,31 @@ class Reseau:
         self.strat = strat
 
     def valider_reseau(self) -> bool:
-        check=[]
-        if(len(self.arcs)<len(self.noeuds)-1):
+        # Vérifie que le nombre d'arcs est suffisant pour relier tous les noeuds
+        
+        if len(self.arcs) < len(self.noeuds) - 1:
             return False
-        for i in range(0, len(self.noeuds)-1):
-            if(i==self.noeud_entree):
-                check.append(True)
-            else:
-                if(self.arcs[i-1]==(self.noeud_entree,i)):
-                    check.append(True)
-                elif(check[self.arcs[i-1][0]]):
-                    check.append(True)
-                else:
-                    return False           
-        return True
+
+        # Initialisation d'un ensemble pour suivre les noeuds visités
+        visited = set()
+        to_visit = [self.noeud_entree]
+        
+        # Exploration des noeuds à partir de l'entrée
+        while to_visit:
+            
+            current = to_visit.pop()
+            if current not in visited:
+                visited.add(current)
+
+                # Parcours des arcs pour trouver les noeuds connectés
+                for n1, n2 in self.arcs:
+                    if n1 == current and n2 not in visited:
+                        to_visit.append(n2)
+                    elif n2 == current and n1 not in visited:
+                        to_visit.append(n1)
+
+        # Vérifie que tous les noeuds ont été visités
+        return len(visited) == len(self.noeuds)
 
     def valider_distribution(self, t: Terrain) -> bool:
         clients = t.get_clients()#on récupère la positions des clients
